@@ -9,7 +9,7 @@ defmodule ScrapeServer.MixProject do
     [
       app: @app,
       version: @version,
-      elixir: "~> 1.9",
+      elixir: "~> 1.11",
       archives: [nerves_bootstrap: "~> 1.10"],
       start_permanent: Mix.env() == :prod,
       build_embedded: true,
@@ -35,6 +35,9 @@ defmodule ScrapeServer.MixProject do
       {:shoehorn, "~> 0.7.0"},
       {:ring_logger, "~> 0.8.1"},
       {:toolshed, "~> 0.2.13"},
+      {:httpoison, "~> 1.8"},
+      {:jason, "~> 1.2"},
+      {:floki, "~> 0.30.0"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11.3", targets: @all_targets},
