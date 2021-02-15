@@ -21,10 +21,9 @@ defmodule ScrapeServer.Scheduler do
 
   # internal api
 
-  defp runchecks, do: Logger.info "running checks"
+  defp runchecks do
+    Logger.info "running checks"
+  end
 
-  defp schedule, do: Process.send_after(self(), :runchecks, freq())
-
-  #defp freq, do: 5 * 60 * 1000
-  defp freq, do: 5 * 1000
+  defp schedule, do: Process.send_after(self(), :runchecks, Application.get_env(:scrape_server, :freq_millis))
 end

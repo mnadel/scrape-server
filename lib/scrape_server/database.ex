@@ -8,6 +8,8 @@ defmodule ScrapeServer.Database do
 
   def check(url, data), do: GenServer.call(:database, {:check, url, data})
 
+  def url_stream, do: GenServer.call(:database, :keys)
+
   # callbacks
 
   def init(_) do
@@ -16,6 +18,10 @@ defmodule ScrapeServer.Database do
 
   def handle_call({:check, url, data}, _, state) do
     {:reply, check_changed(state[:db], url, data), state}
+  end
+
+  def handle_call(:keys, _, state) do
+    {:reply, keys(state[:db]), state}
   end
 
   # internal api
@@ -66,5 +72,16 @@ defmodule ScrapeServer.Database do
   defp set(db, url, hash) do
     Logger.info "storing url=#{url}, hash=#{hash}"
     :dets.insert(db, {url, hash})
+  end
+
+  defp keys(db) do
+    Stream.resource(
+      fn -> :dets.first(db) end,
+      fn
+        :"$end_of_table" -> {:halt, nil}
+        key -> {[key], :dets.next(db, key)}
+      end,
+      fn _ -> :ok end
+    )
   end
 end
