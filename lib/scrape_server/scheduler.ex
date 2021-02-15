@@ -9,6 +9,7 @@ defmodule ScrapeServer.Scheduler do
   # callbacks
 
   def init(_) do
+    runchecks()
     schedule()
     {:ok, %{}}
   end
@@ -24,24 +25,25 @@ defmodule ScrapeServer.Scheduler do
   defp runchecks do
     Logger.info "running checks"
 
-    ScrapeServer.Database.urls
-    |> Stream.each(&(check(&1)))
-    |> Stream.run
+    Application.get_env(:scrape_server, :checks)
+      |> Enum.each(&check/1)
   end
 
-  defp check(url) do
-    Logger.info "checking url=#{url}"
+  defp check({url, checker}) do
+    Logger.info "checking url=#{url}, checker=#{checker}"
 
     case ScrapeServer.Fetcher.fetch(url) do
-      {:ok, contents} -> check(url, contents)
+      {:ok, html} -> check(url, html, checker)
       {:error, error} -> Logger.error "error fetching url=#{url}, error=#{error}"
     end
   end
 
-  def check(url, contents) do
-    check = ScrapeServer.Database.check(url, contents)
-    case check do
-      {:changed, true} -> ScrapeServer.Notifier.notify(url, contents)
+  defp check(url, html, checker) do
+    contents = apply(String.to_existing_atom("Elixir." <> checker), :contents, [html])
+    message = apply(String.to_existing_atom("Elixir." <> checker), :message, [url, contents])
+
+    case ScrapeServer.Database.check(url, contents) do
+      {:changed, true} -> ScrapeServer.Notifier.notify(url, message)
       _ -> :noop
     end
   end

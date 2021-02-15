@@ -33,5 +33,6 @@ else
   import_config "target.exs"
 end
 
+import_config "checks.exs"
 import_config "secrets.exs"
 import_config "#{Mix.env()}.exs"
