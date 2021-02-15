@@ -46,14 +46,13 @@ defmodule ScrapeServer.Database do
     new_hash = hash(data)
     old_hash = get(db, url)
 
-    Logger.info "url=#{url}, prevhash=#{old_hash}, newhash=#{new_hash}"
+    Logger.info "processing url=#{url}, prevhash=#{old_hash}, newhash=#{new_hash}"
 
-    case hashes_differ(new_hash, old_hash) do
-      true ->
-        set(db, url, new_hash)
-        {:changed, true}
-      false ->
-        {:changed, false}
+    if hashes_differ(new_hash, old_hash) do
+      set(db, url, new_hash)
+      {:changed, true}
+    else
+      {:changed, false}
     end
   end
 
