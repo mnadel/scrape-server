@@ -4,9 +4,9 @@ defmodule ScrapeServer.Database do
 
   # client api
 
-  def start_link(opts \\ []), do: GenServer.start_link(__MODULE__, :ok, opts)
+  def start_link(args \\ []), do: GenServer.start_link(__MODULE__, args, name: :database)
 
-  def check(pid, url, data), do: GenServer.call(pid, {:check, url, data})
+  def check(url, data), do: GenServer.call(:database, {:check, url, data})
 
   # callbacks
 

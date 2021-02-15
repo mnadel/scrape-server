@@ -26,6 +26,7 @@ defmodule ScrapeServer.Application do
       # Children that only run on the host
       # Starts a worker by calling: ScrapeServer.Worker.start_link(arg)
       # {ScrapeServer.Worker, arg},
+      {ScrapeServer.Database, :init}
     ]
   end
 
