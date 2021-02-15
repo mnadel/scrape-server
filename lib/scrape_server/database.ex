@@ -8,7 +8,7 @@ defmodule ScrapeServer.Database do
 
   def check(url, data), do: GenServer.call(:database, {:check, url, data})
 
-  def url_stream, do: GenServer.call(:database, :keys)
+  def urls, do: GenServer.call(:database, :urls)
 
   # callbacks
 
@@ -20,8 +20,24 @@ defmodule ScrapeServer.Database do
     {:reply, check_changed(state[:db], url, data), state}
   end
 
-  def handle_call(:keys, _, state) do
-    {:reply, keys(state[:db]), state}
+  def handle_call(:urls, _, state) do
+    {:reply, urls(state[:db]), state}
+  end
+
+  def terminate(reason, state) do
+    Logger.info "shutting down database reason=#{reason}"
+
+    case :dets.sync(state[:db]) do
+      {:error, reason} -> Logger.info "error syncing database reason=#{reason}"
+      :ok -> Logger.info "database synced to disk"
+    end
+
+    case :dets.close(state[:db]) do
+      {:error, reason} -> Logger.info "error closing database reason=#{reason}"
+      :ok -> Logger.info "database closed"
+    end
+
+    :ok
   end
 
   # internal api
@@ -74,7 +90,7 @@ defmodule ScrapeServer.Database do
     :dets.insert(db, {url, hash})
   end
 
-  defp keys(db) do
+  defp urls(db) do
     Stream.resource(
       fn -> :dets.first(db) end,
       fn

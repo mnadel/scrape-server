@@ -24,7 +24,7 @@ defmodule ScrapeServer.Scheduler do
   defp runchecks do
     Logger.info "running checks"
 
-    ScrapeServer.Database.url_stream
+    ScrapeServer.Database.urls
     |> Stream.each(&(check(&1)))
     |> Stream.run
   end
@@ -41,21 +41,9 @@ defmodule ScrapeServer.Scheduler do
   def check(url, contents) do
     check = ScrapeServer.Database.check(url, contents)
     case check do
-      {:changed, true} -> process_change(url)
+      {:changed, true} -> ScrapeServer.Notifier.notify(url, contents)
       _ -> :noop
     end
-  end
-
-  defp process_change(url) do
-    Logger.info "notifying change url=#{url}"
-
-    HTTPoison.post(
-      Application.get_env(:scrape_server, :slack_endpoint),
-      Jason.encode!(%{text: "something at #{url} changed"}),
-      %{"Content-Type" => "application/json"}
-    )
-
-    :ok
   end
 
   defp schedule, do: Process.send_after(self(), :runchecks, Application.get_env(:scrape_server, :freq_millis))
