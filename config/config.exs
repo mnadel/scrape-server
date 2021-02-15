@@ -27,12 +27,16 @@ config :nerves, source_date_epoch: "1613318142"
 
 config :logger, backends: [RingLogger]
 
+config :shoehorn,
+  init: [:nerves_runtime, :nerves_pack],
+  app: Mix.Project.config()[:app]
+
 if Mix.target() == :host or Mix.target() == :"" do
   import_config "host.exs"
 else
   import_config "target.exs"
 end
 
-import_config "checks.exs"
 import_config "secrets.exs"
+import_config "checks.exs"
 import_config "#{Mix.env()}.exs"

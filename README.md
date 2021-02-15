@@ -9,27 +9,14 @@ A [Nerves](https://www.nerves-project.org/) app that scrapes a site, determines 
 Create a `secrets.exs` file in `config/` with contents similar to this:
 
 ```
-config :scrape_server,
-  slack_endpoint: "https://hooks.slack.com/services/ABC/DEF/MdH4YJpKieJdTzMQ"
+use Mix.Config
 
-config :vintage_net,
-  config: [
-    {"wlan0",
-      %{
-        type: VintageNetWiFi,
-        vintage_net_wifi: %{
-          networks: [
-            %{
-              key_mgmt: :wpa_psk,
-              ssid: "<< YOUR SSID HERE >>",
-              psk: "<< YOUR WPA2 PSK PASSWORD HERE >>",
-            }
-          ]
-        },
-        ipv4: %{method: :dhcp},
-      }
-    }
-  ]
+config :scrape_server,
+  slack_endpoint: "https://hooks.slack.com/services/ABC/DEF/MdH4YJpKieJdTzMQ",
+  wifi: %{
+    ssid: "<< YOUR SSID HERE >>",
+    psk: "<< YOUR WPA2 PSK PASSWORD HERE >>"
+  }
 ```
 
 To build your Nerves app:
