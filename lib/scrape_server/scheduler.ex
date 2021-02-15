@@ -49,8 +49,8 @@ defmodule ScrapeServer.Scheduler do
   defp process_change(url) do
     Logger.info "notifying change url=#{url}"
 
-    HTTPoison.post!(
-      Application.get_env(:scrape_server_secrets, :slack_endpoint),
+    HTTPoison.post(
+      Application.get_env(:scrape_server, :slack_endpoint),
       Jason.encode!(%{text: "something at #{url} changed"}),
       %{"Content-Type" => "application/json"}
     )

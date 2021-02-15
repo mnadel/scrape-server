@@ -9,8 +9,7 @@ import Config
 Application.start(:nerves_bootstrap)
 
 config :scrape_server,
-  target: Mix.target(),
-  freq_millis: 5*1000
+  target: Mix.target()
 
 # Customize non-Elixir parts of the firmware. See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
@@ -35,3 +34,4 @@ else
 end
 
 import_config "secrets.exs"
+import_config "#{Mix.env()}.exs"
