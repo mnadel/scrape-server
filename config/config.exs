@@ -33,3 +33,5 @@ if Mix.target() == :host or Mix.target() == :"" do
 else
   import_config "target.exs"
 end
+
+import_config "secrets.exs"

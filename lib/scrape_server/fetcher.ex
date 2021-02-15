@@ -13,7 +13,7 @@ defmodule ScrapeServer.Fetcher do
         {:ok, body}
       {:ok, %HTTPoison.Response{status_code: 301, headers: headers}} ->
         location_header = headers
-          |> Enum.find(@notfound_resp, &("Location" = elem(&1, 0)))
+          |> Enum.find(@notfound_resp, &("Location" == elem(&1, 0)))
         url = elem(location_header, 1)
         fetch(url, redirect_count + 1)
       {:error, %HTTPoison.Error{reason: reason}} ->
