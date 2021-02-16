@@ -2,18 +2,16 @@
 
 A [Nerves](https://www.nerves-project.org/) app that scrapes a site and notifies you via Slack if something interesting on it changed.
 
-[Nerves](https://www.nerves-project.org/) is an embedded version of Elixir that can run on any Pi, including the $5 [Pi Zero](https://www.raspberrypi.org/products/raspberry-pi-zero/). It's a custom Linux kernel that boots directly into the BEAM.
+[Nerves](https://www.nerves-project.org/) is an embedded version of Elixir that can run on any Pi, including the $10 [Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/). It's a custom Linux kernel that boots into the BEAM.
 
 ## Getting Started
 
-Sites to monitor are currently stored in `checks.exs`. Each check is a tuple in the form of `{url, module}`.
+Sites to monitor are currently stored in `checks.exs`. Each check is a tuple in the form of `{url, module}`:
 
-`url` is a string and `module` is a module that exports two methods:
+- `url` is a string referencing the URL to monitor
+- `module` is a module that `@derive`s `Checker`
 
-* `contents/1` which takes the HTML string of the URL and returns the interesting bits of the site we're monitoring
-* `message/2` which takes the url and the output of `contents/1` and returns the message that'll get Slacked
-
-Every five minutes we'll fetch the `url` and send it through `contents/1`. If the contents have changed since the last time we checked the url, we'll Slack you a notification.
+Every five minutes we'll fetch the `url` and use the `module` to determine if there's changes that need to be Slacked.
 
 ## Building
 
