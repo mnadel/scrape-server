@@ -38,8 +38,8 @@ defmodule ScrapeServer.Scheduler do
   end
 
   defp check(url, html, checker) do
-    contents = apply(String.to_existing_atom("Elixir." <> checker), :contents, [html])
-    message = apply(String.to_existing_atom("Elixir." <> checker), :message, [url, contents])
+    contents = apply(checker, :contents, [html])
+    message = apply(checker, :message, [url, contents])
 
     case ScrapeServer.Database.check(url, contents) do
       {:changed, true} -> ScrapeServer.Notifier.notify(url, message)
