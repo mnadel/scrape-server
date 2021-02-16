@@ -60,3 +60,8 @@ or print the next messages in the log:
 
 iex(1)>
 ```
+
+Once you burn the firmware, you can do OTA deploys via ssh:
+
+* `MIX_ENV=prod MIX_TARGET=rpi0 mix firmware.burn`
+* `MIX_ENV=prod MIX_TARGET=rpi0 mix upload 10.0.0.43`
