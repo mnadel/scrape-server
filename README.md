@@ -32,10 +32,10 @@ Next burn the app/firmware to your SD card:
 
   1. Install dependencies with `mix deps.get`
   1. Create firmware with `MIX_ENV=prod MIX_TARGET=rip0 mix firmware`
-  1. Burn to an SD card with `MIX_ENV=prod MIX_TARGET=rip0 mix firmware.burn`
-      1. This will prompt you to burn to any discovered SD cards
+  1. Build & burn the firmware to an SD card with `MIX_ENV=prod MIX_TARGET=rip0 mix firmware.burn`
+      1. This will prompt you to burn to a discovered SD card
 
-Drop your SD card into your Pi, then ssh to it and you'll be dropped right into an IEx session:
+Pop the SD card into your Pi, then ssh to it and you'll be dropped right into an IEx session:
 
 ```
 [14:41:50 ~proj/scrape_server]→ ssh 10.0.0.43
