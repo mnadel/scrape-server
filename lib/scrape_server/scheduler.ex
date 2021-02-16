@@ -4,12 +4,11 @@ defmodule ScrapeServer.Scheduler do
 
   # client api
 
-  def start_link(_opts), do: GenServer.start(__MODULE__, [])
+  def start_link(_opts), do: GenServer.start(__MODULE__, [], name: :scheduler)
 
   # callbacks
 
   def init(_) do
-    runchecks()
     schedule()
     {:ok, %{}}
   end

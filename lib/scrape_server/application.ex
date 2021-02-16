@@ -15,7 +15,9 @@ defmodule ScrapeServer.Application do
         # Children for all targets
         # Starts a worker by calling: ScrapeServer.Worker.start_link(arg)
         # {ScrapeServer.Worker, arg},
-      ] ++ children(target())
+        {ScrapeServer.Database, :init},
+        {ScrapeServer.Scheduler, :init}
+        ] ++ children(target())
 
     Supervisor.start_link(children, opts)
   end
@@ -26,8 +28,6 @@ defmodule ScrapeServer.Application do
       # Children that only run on the host
       # Starts a worker by calling: ScrapeServer.Worker.start_link(arg)
       # {ScrapeServer.Worker, arg},
-      {ScrapeServer.Database, :init},
-      {ScrapeServer.Scheduler, :init}
     ]
   end
 
