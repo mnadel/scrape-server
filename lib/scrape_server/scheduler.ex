@@ -28,7 +28,9 @@ defmodule ScrapeServer.Scheduler do
       |> Enum.each(&check/1)
   end
 
-  defp check({url, checker}) do
+  defp check(checker) do
+    url = checker.url("")
+
     Logger.info "checking url=#{url}, checker=#{checker}"
 
     case ScrapeServer.Fetcher.fetch(url) do

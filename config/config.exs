@@ -31,10 +31,10 @@ config :shoehorn,
   init: [:nerves_runtime, :nerves_pack],
   app: Mix.Project.config()[:app]
 
-config :nerves_firmware_ssh,
-  authorized_keys: [
-    File.read!(Path.join(System.user_home!, ".ssh/id_rsa.pub"))
-  ]
+# config :nerves_firmware_ssh,
+#   authorized_keys: [
+#     File.read!(Path.join(System.user_home!, ".ssh/id_rsa.pub"))
+#   ]
 
 if Mix.target() == :host or Mix.target() == :"" do
   import_config "host.exs"
