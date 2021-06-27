@@ -31,7 +31,7 @@ defmodule ScrapeServer.Scheduler do
   defp check(checker) do
     url = checker.url("")
 
-    Logger.info "checking url=#{url}, checker=#{checker}"
+    Logger.info "checking checker=#{checker}, url=#{url}"
 
     case ScrapeServer.Fetcher.fetch(url) do
       {:ok, html} -> check(url, html, checker)

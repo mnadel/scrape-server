@@ -43,7 +43,6 @@ defmodule ScrapeServer.MixProject do
       {:nerves_runtime, "~> 0.11", targets: @all_targets},
       {:nerves_pack, "~> 0.4", targets: @all_targets},
       {:vintage_net_wifi, "~> 0.10", targets: @all_targets},
-      # {:nerves_firmware_ssh, "~> 0.4", targets: @all_targets},
 
       # Dependencies for specific targets
       {:nerves_system_rpi, "~> 1.16", runtime: false, targets: :rpi},
