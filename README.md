@@ -6,12 +6,17 @@ A [Nerves](https://www.nerves-project.org/) app that scrapes a site and notifies
 
 ## Getting Started
 
-Sites to monitor are currently stored in `checks.exs`. Each check is a tuple in the form of `{url, module}`:
+Checks to run (i.e. sites to monitor) are currently stored in `checks.exs`.
 
-- `url` is a string referencing the URL to monitor
-- `module` is a module that `@derive`s `Checker`
+Every five minutes we'll fetch the site's contents, parse out the interesting bit, and Slack you if it has changed.
 
-Every five minutes we'll fetch the `url` and use the `module` to determine if there's changes that need to be Slacked.
+### Adding a new check
+
+1. Implement a new module that derives from `Checker`
+    1. You'll specify the `url` to check
+    1. A method `contents`, which uses [Floki](https://github.com/philss/floki) to parse the page to find the relevant content
+    1. And a `message` to emit when a change in the content is detected
+2. Add that module's name to `checks.exs`
 
 ## Building
 
