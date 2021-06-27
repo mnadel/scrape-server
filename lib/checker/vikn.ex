@@ -14,6 +14,4 @@ defmodule Checker.Vikn do
   def message(url, contents), do: "Something changed at #{url}\nLiquid chalk is #{contents}"
 
   def url(_info), do: "https://viknperformance.com/collections/liquid-chalk-vikn-performance/products/liquid-chalk"
-
-  def enabled(_info), do: true
 end

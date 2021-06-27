@@ -8,23 +8,42 @@ defmodule ScrapeServer.Database do
 
   def check(url, data), do: GenServer.call(:database, {:check, url, data})
 
-  def urls, do: GenServer.call(:database, :urls)
-
   # callbacks
 
   def init(_) do
-    {:ok, %{db: db()}}
+    {:ok, %{db: db(:init)}}
   end
 
   def handle_call({:check, url, data}, _, state) do
     {:reply, check_changed(state[:db], url, data), state}
   end
 
-  def handle_call(:urls, _, state) do
-    {:reply, urls(state[:db]), state}
+  def terminate(reason, state) do
+    Logger.info "shutting down database reason=#{reason}"
+
+    case :dets.sync(state[:db]) do
+      {:error, reason} -> Logger.info "error syncing database reason=#{reason}"
+      :ok -> Logger.info "database synced to disk"
+    end
+
+    case :dets.close(state[:db]) do
+      {:error, reason} -> Logger.info "error closing database reason=#{reason}"
+      :ok -> Logger.info "database closed"
+    end
+
+    :ok
   end
 
   # internal api
+
+  defp db(:init) do
+    data_path = Application.get_env(:scrape_server, :data_path)
+
+    case :dets.open_file(:"#{data_path}/url_hashes", [auto_save: 5*1000]) do
+      {:ok, table} -> table
+      {:error, reason} -> db(reason)
+    end
+  end
 
   defp check_changed(db, url, data) do
     new_hash = hash(data)
@@ -45,12 +64,8 @@ defmodule ScrapeServer.Database do
     hashed |> Base.encode16(case: :lower)
   end
 
-  defp db do
-    :ets.new(:url_hashes, [:set, :protected])
-  end
-
   defp get(db, url) do
-    case :ets.lookup(db, url) do
+    case :dets.lookup(db, url) do
         [{_, hash}] -> hash
         _ -> nil
     end
@@ -58,15 +73,15 @@ defmodule ScrapeServer.Database do
 
   defp set(db, url, hash) do
     Logger.info "storing url=#{url}, hash=#{hash}"
-    :ets.insert(db, {url, hash})
+    :dets.insert(db, {url, hash})
   end
 
   defp urls(db) do
     Stream.resource(
-      fn -> :ets.first(db) end,
+      fn -> :dets.first(db) end,
       fn
         :"$end_of_table" -> {:halt, nil}
-        key -> {[key], :ets.next(db, key)}
+        key -> {[key], :dets.next(db, key)}
       end,
       fn _ -> :ok end
     )

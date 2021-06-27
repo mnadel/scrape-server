@@ -38,7 +38,6 @@ defmodule ScrapeServer.MixProject do
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
       {:floki, "~> 0.31"},
-      {:amnesia, "~> 0.2"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.11", targets: @all_targets},

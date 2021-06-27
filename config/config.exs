@@ -9,7 +9,8 @@ import Config
 Application.start(:nerves_bootstrap)
 
 config :scrape_server,
-  target: Mix.target()
+  target: Mix.target(),
+  data_path: "/data"
 
 # Customize non-Elixir parts of the firmware. See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
@@ -31,10 +32,10 @@ config :shoehorn,
   init: [:nerves_runtime, :nerves_pack],
   app: Mix.Project.config()[:app]
 
-# config :nerves_firmware_ssh,
-#   authorized_keys: [
-#     File.read!(Path.join(System.user_home!, ".ssh/id_rsa.pub"))
-#   ]
+config :nerves_firmware_ssh,
+  authorized_keys: [
+    File.read!(Path.join(System.user_home!, ".ssh/id_rsa.pub"))
+  ]
 
 if Mix.target() == :host or Mix.target() == :"" do
   import_config "host.exs"

@@ -30,9 +30,9 @@ config :scrape_server,
 
 Next burn the app/firmware to your SD card:
 
-  1. Install dependencies with `mix deps.get`
-  1. Create firmware with `MIX_ENV=prod MIX_TARGET=rip0 mix firmware`
-  1. Build & burn the firmware to an SD card with `MIX_ENV=prod MIX_TARGET=rip0 mix firmware.burn`
+  1. Install dependencies with `MIX_TARGET=rpi0 mix deps.get`
+  1. Create firmware with `MIX_ENV=prod MIX_TARGET=rpi0 mix firmware`
+  1. Build & burn the firmware to an SD card with `MIX_ENV=prod MIX_TARGET=rpi0 mix firmware.burn`
       1. This will prompt you to burn to a discovered SD card
 
 Pop the SD card into your Pi, then ssh to it and you'll be dropped right into an IEx session:
@@ -59,7 +59,9 @@ or print the next messages in the log:
 iex(1)>
 ```
 
-Once you have the device up & running you can do OTA deploys via ssh:
+## Updating
+
+Once you have the device up & running you can do OTA (over-the-air) deploys via ssh:
 
 * `MIX_ENV=prod MIX_TARGET=rpi0 mix firmware`
-* `MIX_ENV=prod MIX_TARGET=rpi0 mix upload 10.0.0.43`
+* `MIX_ENV=prod MIX_TARGET=rpi0 mix upload <device ip address>`
