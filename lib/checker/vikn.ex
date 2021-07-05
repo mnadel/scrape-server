@@ -1,5 +1,8 @@
 defmodule Checker.Vikn do
   @derive [Checker]
+
+  def url(_info), do: "https://viknperformance.com/collections/liquid-chalk-vikn-performance/products/liquid-chalk"
+
   def contents(html) do
     case Floki.parse_document html do
       {:ok, doc} -> doc
@@ -11,7 +14,5 @@ defmodule Checker.Vikn do
     end
   end
 
-  def message(url, contents), do: "Something changed at #{url}\nLiquid chalk is #{contents}"
-
-  def url(_info), do: "https://viknperformance.com/collections/liquid-chalk-vikn-performance/products/liquid-chalk"
+  def message(contents), do: "Liquid chalk is #{contents}"
 end

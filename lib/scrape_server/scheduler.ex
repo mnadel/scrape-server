@@ -41,10 +41,11 @@ defmodule ScrapeServer.Scheduler do
 
   defp check(url, html, checker) do
     contents = apply(checker, :contents, [html])
-    message = apply(checker, :message, [url, contents])
 
     case ScrapeServer.Database.check(url, contents) do
-      {:changed, true} -> ScrapeServer.Notifier.notify(url, message)
+      {:changed, true} ->
+        message = apply(checker, :message, [contents])
+        ScrapeServer.Notifier.notify(url, message)
       _ -> :noop
     end
   end

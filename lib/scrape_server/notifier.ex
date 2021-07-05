@@ -9,7 +9,7 @@ defmodule ScrapeServer.Notifier do
     if slack_url do
       HTTPoison.post(
         slack_url,
-        Jason.encode!(%{text: message}),
+        Jason.encode!(%{text: "Something changed at #{url}\n#{message}"}),
         %{"Content-Type" => "application/json"}
       )
     end
