@@ -6,6 +6,8 @@ defmodule ScrapeServer.Scheduler do
 
   def start_link(_opts), do: GenServer.start(__MODULE__, [], name: :scheduler)
 
+  def run_check(module), do: GenServer.call(:scheduler, {:check, module})
+
   # callbacks
 
   def init(_) do
@@ -19,6 +21,10 @@ defmodule ScrapeServer.Scheduler do
     {:noreply, state}
   end
 
+  def handle_call({:check, module}, _, state) do
+    {:reply, check(module), state}
+  end
+
   # internal api
 
   defp runchecks do
@@ -29,7 +35,7 @@ defmodule ScrapeServer.Scheduler do
   end
 
   defp check(checker) do
-    url = checker.url("")
+    url = checker.url(:noop)
 
     Logger.info "checking checker=#{checker}, url=#{url}"
 
@@ -46,7 +52,7 @@ defmodule ScrapeServer.Scheduler do
       {:changed, true} ->
         message = apply(checker, :message, [contents])
         ScrapeServer.Notifier.notify(url, message)
-      _ -> :noop
+      _ -> :nochange
     end
   end
 
