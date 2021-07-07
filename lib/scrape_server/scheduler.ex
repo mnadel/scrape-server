@@ -30,8 +30,16 @@ defmodule ScrapeServer.Scheduler do
   defp runchecks do
     Logger.info "running checks"
 
-    Application.get_env(:scrape_server, :checks)
-      |> Enum.each(&check/1)
+    checkers = with {:ok, list} <- :application.get_key(:scrape_server, :modules) do
+      list
+      |> Enum.filter(&(&1 |> Module.split |> Enum.take(1) == ~w|Checker|))
+      |> Enum.filter(&(&1 |> Atom.to_string |> String.contains?(".Checker.")))
+    end
+
+    Logger.info "found checks=#{inspect(checkers)}"
+
+    checkers
+    |> Enum.each(&check/1)
   end
 
   defp check(checker) do
