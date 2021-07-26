@@ -3,6 +3,8 @@ defmodule Checker.Pts do
 
   def url(_info), do: "https://www.ptscoffee.com/collections/single-origin-coffee/products/yirgacheffe-tigesit-waqa-natural"
 
+  def headers(_info), do: []
+
   def message(contents), do: "Tigesit Waqa Natural is #{contents}"
 
   def contents(html) do

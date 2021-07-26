@@ -8,6 +8,10 @@ defmodule ScrapeServer.Database do
 
   def check(url, data), do: GenServer.call(:database, {:check, url, data})
 
+  def inspect(), do: GenServer.call(:database, :inspect)
+
+  def urls(), do: GenServer.call(:database, :urls)
+
   # callbacks
 
   def init(_) do
@@ -16,6 +20,14 @@ defmodule ScrapeServer.Database do
 
   def handle_call({:check, url, data}, _, state) do
     {:reply, check_changed(state[:db], url, data), state}
+  end
+
+  def handle_call(:inspect, _, state) do
+    {:reply, inspect_db(state[:db]), state}
+  end
+
+  def handle_call(:urls, _, state) do
+    {:reply, urls(state[:db]), state}
   end
 
   def terminate(reason, state) do
@@ -85,5 +97,10 @@ defmodule ScrapeServer.Database do
       end,
       fn _ -> :ok end
     )
+  end
+
+  defp inspect_db(db) do
+    urls(db)
+    |> Stream.map(&(get(db, &1)))
   end
 end

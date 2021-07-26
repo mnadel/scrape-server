@@ -3,6 +3,10 @@ defprotocol Checker do
   @doc "return the url that this checker is checking"
   def url(_info)
 
+  @spec headers(String.t()) :: [{String.t(), String.t()}]
+  @doc "return headers to send with request"
+  def headers(_info)
+
   @spec contents(String.t()) :: String.t()
   @doc "given the html source, generate the interesting contents of the page"
   def contents(html)
