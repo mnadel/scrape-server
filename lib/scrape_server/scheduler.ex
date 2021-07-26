@@ -49,6 +49,7 @@ defmodule ScrapeServer.Scheduler do
 
     case ScrapeServer.Fetcher.fetch(url) do
       {:ok, html} -> check(url, html, checker)
+      {:error, code, error} -> Logger.error "error fetching url=#{url}, code=#{code}, error=#{error}"
       {:error, error} -> Logger.error "error fetching url=#{url}, error=#{error}"
     end
   end
