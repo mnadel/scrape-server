@@ -12,6 +12,7 @@ defmodule ScrapeServer.Scheduler do
 
   def init(_) do
     schedule()
+    runchecks()
     {:ok, %{}}
   end
 
@@ -38,8 +39,11 @@ defmodule ScrapeServer.Scheduler do
 
     Logger.info "found checks=#{inspect(checkers)}"
 
-    checkers
-    |> Enum.each(&check/1)
+    Enum.each(checkers, fn checker ->
+      Task.start(fn ->
+        check(checker)
+      end)
+    end)
   end
 
   defp check(checker) do
